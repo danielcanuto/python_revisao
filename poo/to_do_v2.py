@@ -2,6 +2,21 @@
 from datetime import datetime
 
 
+class Projeto():
+    def __init__(self, nome):
+        self.nome = nome
+        self.tarefas = []
+    
+    def add (self, descricao):
+        self.tarefa.append(Tarefa(descricao))
+    
+    def pendentes(self):
+        return [tarefa for tarefa in self.tarefas if not tarefa.feito]
+
+    def procurar(self, descricao):
+        return [tarefa for tarefa in self.tarefas
+                if tarefa.decricao == descricao[0]]
+
 class Tarefa:
     def __init__(self, descricao):
         self.descricao = descricao
