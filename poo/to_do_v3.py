@@ -3,9 +3,15 @@ from datetime import datetime
 
 
 class Projeto:
+    # metodo construtor
     def __init__(self, nome):
         self.nome = nome
         self.tarefas = []
+
+        
+    # metodo de interaçãõ
+    def __iter__(self):
+        return self.tarefas.__iter__()
 
     def add(self, descricao):
         self.tarefas.append(Tarefa(descricao))
@@ -36,7 +42,8 @@ class Tarefa:
 
 
 def status_projeto(projeto):
-    for tarefa in projeto.tarefas:
+    # for tarefa in projeto.tarefas:
+    for tarefa in projeto:
         print(f'-{tarefa}')
     
     print(projeto)

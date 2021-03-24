@@ -1,14 +1,20 @@
 #!/usr/bin/python3
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 class Projeto:
+    # metodo construtor
     def __init__(self, nome):
         self.nome = nome
         self.tarefas = []
 
-    def add(self, descricao):
-        self.tarefas.append(Tarefa(descricao))
+    # metodo de interaçãõ
+
+    def __iter__(self):
+        return self.tarefas.__iter__()
+
+    def add(self, descricao, vencimento=None):
+        self.tarefas.append(Tarefa(descricao, vencimento))
 
     def pendentes(self):
         return [tarefa for tarefa in self.tarefas
@@ -23,20 +29,31 @@ class Projeto:
 
 
 class Tarefa:
-    def __init__(self, descricao):
+    def __init__(self, descricao, vencimento=None):
         self.descricao = descricao
         self.feito = False
         self.criacao = datetime.now()
+        self.vencimento = vencimento
 
     def concluir(self):
         self.feito = True
 
     def __str__(self):
-        return self.descricao + " - " + ('status = Concluída)' if self.feito else "status = Pendente")
+        status = []
+        if self.feito:
+           status.append("(Concluído)")
+        elif self.vencimento:
+            if datetime.now() > self.vencimento:
+                status.append("(Vencida")
+            else:
+                dias = (self.vencimento - datetime.now()).days
+                status.append(f"(Vence em {dias} dias)")
+        return f'{self.descricao} ' + " ".join(status)
 
 
 def status_projeto(projeto):
-    for tarefa in projeto.tarefas:
+    # for tarefa in projeto.tarefas:
+    for tarefa in projeto:
         print(f'-{tarefa}')
     
     print(projeto)
@@ -46,7 +63,7 @@ def main():
 
 
     casa = Projeto('Tarefas de Casa')
-    casa.add("Passar roupa")
+    casa.add("Passar roupa", datetime.now())
     casa.add("Lavar prato")
     status_projeto(casa)
 
@@ -57,7 +74,7 @@ def main():
 
     mercado = Projeto("Compras Mercado")
     mercado.add("Frutas seca")
-    mercado.add("Carne")
+    mercado.add("Carne", datetime.now() + timedelta(days=3, minutes=12))
     mercado.add("Tomate")
     print(mercado)
     status_projeto(mercado)
